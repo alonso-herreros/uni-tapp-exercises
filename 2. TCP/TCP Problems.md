@@ -7,7 +7,7 @@
 Let the TCP connection configured with a MT U = 1320 Bytes, running over a
 20Mbps link with a propagation time of 5ms. Calculate the RTT (Round Trip Time)
 
-> **Answer**
+> **Answer** ($✓$)
 >
 > First, we'll find the transmission time for the biggest segment possible, $T_{txSEG}$. This is a
 > transmission of maximum size, so its size (including headers) is the MTU: $1320$ bytes
