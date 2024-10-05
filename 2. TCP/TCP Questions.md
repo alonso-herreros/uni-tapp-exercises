@@ -135,6 +135,12 @@ The fast recovery / fast retransmit mechanism allows the sender to retransmit th
 without waiting for the retransmission timer to expire. How does the window grow until the lost
 segment arrives (in slow start or congestion avoidance)?
 
+> **Answer**
+>
+> When using fast recovery / fast retransmit, the congestion window and `ssthresh` are both set to
+> half the `cwnd` value at time of receiving a triple duplicate ACK. The congestion control
+> algorithm is then set to congestion avoidance mode.
+
 ## Question 12
 About TCP windows
 
