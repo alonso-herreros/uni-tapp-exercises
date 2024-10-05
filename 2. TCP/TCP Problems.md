@@ -37,9 +37,15 @@ propagation time of 5ms. Calculate the RTT (Round Trip Time).
 
 ### Basic Problem 2
 Unless instructed otherwise in the problem you can assume that **every segment is individually
-acknowledged** (simplifies calculations) abd that **the sender always sends data if there are data
+acknowledged** (simplifies calculations) and that **the sender always sends data if there are data
 to be sent** (whenever there is enough window and data pending to be sent). Reason about differences
 in cases when you assume this and when not.
+
+> **Answer**
+>
+> The first assumption implies that delayed acknowledgements are not being used. This option can be
+> turned off in some cases. The second assumption implies that Nagle's Algorithm is not being used
+> either.
 
 ### Basic Problem 3
 If the sender sends the whole window during an RTT, how much will the window grow depending on the
