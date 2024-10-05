@@ -47,6 +47,21 @@ If a server receives an RST in response to its (SYN,ACK) accepting the connectio
 that case? Would the passive socket be closed? Would the (SYN,ACK) be retransmitted? Would a timeout
 occur?
 
+> **Answer**
+>
+> If one side receives an RST, it must assume the other side is forced to close the connection, and
+> it must set that socket as closed.
+>
+> The passive socket that listens for new connections
+> does not need to be closed in this case, as new connections from the same client or other clients
+> could still be successful.
+>
+> No packets would be sent in response to the RST segment, so the server should not retransmitt the
+> (SYN,ACK) segment.
+>
+> There would be no timeout, as the server has received an RST segment and should close that
+> connection immediately.
+
 ## Question 5
 What effective window does Nagle authorize when in use for the first segment that is sent if nothing
 is pending acknowledgment? When we study slow start and congestion avoidance, return here to
