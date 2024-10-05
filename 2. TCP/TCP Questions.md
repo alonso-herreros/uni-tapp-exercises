@@ -12,6 +12,18 @@ Assuming two machines are connected to the same local area network, if they exch
 traffic, does fragmentation occur? Indicate in which cases and the reason. Would there be
 fragmentation outside the local network?
 
+> **Answer**
+>
+> In the case of UDP, there is no connection and no MTU discovery, so fragmentation may occur if
+> segments are too big. This may happen within the LAN and outside too.
+>
+> In TCP, there should be no fragmentation as long as the Path MTU Discovery protocol works
+> correctly. However, if there are changes in the network and the traffic in an existing connection
+> has to be redirected through a path with a lower MTU, the network layer may need to fragment the
+> segments before sending them. If the traffic's scope extends out of the LAN, and the Path MTU
+> Discovery protocol works, there should be no fragmentation either. However, the same problem as
+> before may arise.
+
 ## Question 2
 What is the cause of packet loss in TCP/IP?
 
