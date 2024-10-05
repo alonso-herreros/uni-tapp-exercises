@@ -79,6 +79,14 @@ value?) or congestion avoidance?
 What is WIN used for in a TCP connection? Is the parameter different for the receiver or the sender,
 or does it have to be the same?
 
+> **Answer**
+>
+> The effective window `WIN` or $V_{ef}$ limits the number of segments that can be be pending
+> acknowledgement. It is the minimum value between the receiver window, which is the space in the
+> receiver's buffer that is available, and the congestion window, which depends on the congestion
+> control algorithm in use. The receiver and sender both have their own values for all of these
+> parameters, independently of the other side's values.
+
 ## Question 7
 What is the best window in the absence of flow control limits and without congestion issues? The
 largest window, whatever it may be? The smallest possible (what would it be)? The product of
