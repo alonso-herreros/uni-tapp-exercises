@@ -100,6 +100,18 @@ bandwidth and round-trip time ($BW×RTT$)? Why?
 What is the RTO? What parameters does the Jacobson algorithm take into account for calculating the
 retransmission timer? Why is it necessary to have a good estimate of the RTT?
 
+> **Answer**
+>
+> RTO stands for "retransmission timeout". It is the timeout before an unacknowledged segment is
+> retransmitted.
+>
+> The Jacobson algorithm only uses the Smooth RTT ($RTT_S$) in order to calculate the RTO.
+>
+> A good RTO estimate is necessary to avoid redundant rentransmission while also resending lost
+> segments quickly. If it's too low, there could be retransmission of segments that arrived
+> correctly if the ACK takes longer than expected to arrive. If it's too high, there may be wasted
+> time waiting for an ACK that would never arrive.
+
 ## Question 9
 What does the Karn/Partridge algorithm consist of?
 
