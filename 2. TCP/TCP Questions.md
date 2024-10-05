@@ -27,9 +27,20 @@ fragmentation outside the local network?
 ## Question 2
 What is the cause of packet loss in TCP/IP?
 
+> **Answer**
+>
+> The main cause of packet loss is congestion, which causes packet drops due to filled router or
+> switch buffers
+
 ## Question 3
 In TCP, if a server (receiver) finishes sending data and has nothing else to do, can it send the FIN
 without waiting for the sender? What is this called? Can the sender still send more data?
+
+> **Answer**
+>
+> Yes, this is called a half-close. If one side wants to stop sending data, it can send FIN. It will
+> be able to keep receiving data from the other side and sending back ACKs, but it shouldn't send
+> any new data
 
 ## Question 4
 If a server receives an RST in response to its (SYN,ACK) accepting the connection, what happens in
