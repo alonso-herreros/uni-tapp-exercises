@@ -52,6 +52,22 @@ If the sender sends the whole window during an RTT, how much will the window gro
 TCP mode (slow start or congestion avoidance)? How can it be simplified (provide a simplification
 for congestion avoidance)?
 
+> **Answer**
+>
+> In slow start mode, if the sender sends the whole window during an RTT, when it gets back all of
+> the acknowledgements, the congestion window `cwnd` will grow as much as the size of that window.
+> If the effective window was limited by the congestion window, it will grow to twice its original
+> size: `cwnd = 2*cwnd`. If it was limited by the receiver window instead, the congestion window
+> will grow to the combined size of the original congestion window plus the receiver window:
+> `cwnd = cwnd + rwnd`.
+>
+> In congestion avoidance, for each acknowledgement received, the congestion window will grow by a
+> fraction of the MSS equivalent to $\frac{1}{\text{cwnd}} \cdot MSS$. When it gets all
+> acknowledgements for the whole window, if the effective window was limited by the congestion
+> window, then the congestion window will have grown by 1 MSS. However, if the effective window was
+> limited by the receiver window, then the congestion window will have grown by
+> $\frac{\text{rwnd}}{\text{cwnd}}$.
+
 ## 2. Problems
 
 ### Problem 4
