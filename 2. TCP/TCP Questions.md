@@ -68,6 +68,13 @@ is pending acknowledgment? When we study slow start and congestion avoidance, re
 determine which massive traffic algorithm it resembles more: slow start (with what window (cwnd)
 value?) or congestion avoidance?
 
+> **Answer**
+>
+> The Nagle algorithm basically sets the effective window to 1 segment in this case, as only one
+> outstanding small segment can be unacknowledged at at time. This is similar to the slow start
+> algorithm, as in both cases the sender starts by sending one segment and waiting for ACK before
+> proceeding.
+
 ## Question 6
 What is WIN used for in a TCP connection? Is the parameter different for the receiver or the sender,
 or does it have to be the same?
