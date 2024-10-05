@@ -147,18 +147,63 @@ About TCP windows
 ### Sub-question 12.a
 What is the congestion window (cwnd)? When does its value change?
 
+> **Answer**
+>
+> The congestion window `cwnd` is an estimate of how many segments can be sent and stay
+> unacknowledged without risking losses due to congestion. Its value changes in 3 ways:
+>
+> 1. Upon receiving an ACK for a previously unacknowledged segment, `cwnd` grows. This growth
+>    depends on the congestion control mode.
+> 2. Upon receiving a triple duplicate ACK, `cwnd` shrinks to half its previous size.
+> 3. Upon expiration of RTO, `cwnd` is reset to its starting size.
+
 ### Sub-question 12.b
 What is the advertised window (WIN)? How do we find its value?
+
+> **Answer**
+>
+> The advertised window `WIN`, also called the receiver window `rwnd`, is the amount of data that
+> the receiver is willing to accept. Its value is sent in the header of every TCP segment, and is
+> set to the amount of space left in the receiver's buffer. As the application consumes the data,
+> the buffer is freed up, and the next TCP segment, whatever its content, will carry the updated
+> window value. When data is received, it's placed in the buffer, and it stays there until the
+> the application consumes it, filling up the buffer.
 
 ### Sub-question 12.c
 What is the effective window? How is it calculated?
 
+> **Answer**
+>
+> The effective window $V_{ef}$ is the minimum value between the congestion window, `cwnd`, and the
+> advertised window, `rwnd`. It's the amount of data that a sender can send without getting
+> acknowledgements. Once that amount of data is sent, the sender must wait. Upon receiving an ACK,
+> `cwnd` is updated according to the congestion control algorithm, and `rwnd` is updated according
+> to the value advertised in the ACK segment.
+
 ### Sub-question 12.d
 What is the continuous sending window? How is it calculated?
+
+> **Answer**
+>
+> The continuous sending window ($W_{cs}$) is the ideal value for the effective window. This value
+> allows continuous transmission. A bigger window would have no effect on transmission speed, and a
+> smaller window would enforce pauses. Its value can be calculated by dividing the RTT by $t_{tx}$,
+> which is the time that it takes for a whole maximum-size segment to be sent. $W_{cs} =
+> \frac{RTT}{t_{tx}}$. With this value, the effective window should be depleted just in time for an
+> ACK to arrive.
 
 ### Sub-question 12.e
 What is the relationship between the windows regarding the number of segments that can be sent per
 RTT? (Indicate how each one influences the number of segments sent per RTT)
+
+> **Answer**
+>
+> They both affect the number of segments that can be sent per RTT in the same way: they are a limit
+> to that theoretical capacity. Whichever one has the lowest value is the limiting factor at that
+> moment. If the limiting window is the `cwnd`, then once it grows, the amount of segments per RTT
+> will increase. If the limiting window is the `rwnd`, then if it grows, the amount of segments per
+> RTT will increase. In any case,, no matter how big both get, no more segments per RTT can be sent
+> than the value of the continuous sending window, $\frac{RTT}{t_{tx}}$.
 
 ## Question 13
 What do we call the situation in which the rate of data that the sender can transmit is much higher
