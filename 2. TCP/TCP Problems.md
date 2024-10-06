@@ -108,9 +108,9 @@ How long would it take for the congestion window ($cwnd$) to reach 120 segments?
 
 > **Answer**
 >
-> The value of the slow start threshold in segments is $\frac{65535}{1024} \text{segments} ≈ 64 \text{
-> segments}$. This means, from that point on, the congestion window will grow in congestion avoidance
-> mode.
+> The value of the slow start threshold in segments is $\frac{65535}{1024} \text{segments} ≈ 64
+> \text{ segments}$. This means, from that point on, the congestion window will grow in congestion
+> avoidance mode.
 >
 > First, let's find how long it would take to get to that point in the current mode, which is slow
 > start. Assuming the propagation time is much greater than the transmission time, we can simplify
@@ -119,8 +119,8 @@ How long would it take for the congestion window ($cwnd$) to reach 120 segments?
 > cwnd_{final} = cwnd_{initial} \cdot 2^{\frac{t_{final}-t_{initial}}{RTT}}
 > $$
 >
-> Let $t_0$ be the starting moment and $cwnd_0$ be the initial congestion window size. Then, the time
-> it would take for $cwnd$ to reach $ssthresh$ is given by
+> Let $t_0$ be the starting moment and $cwnd_0$ be the initial congestion window size. Then, the
+> time it would take for $cwnd$ to reach $ssthresh$ is given by
 >
 > $$
 > \begin{aligned}
@@ -148,7 +148,8 @@ How long would it take for the congestion window ($cwnd$) to reach 120 segments?
 > \end{aligned}
 > $$
 >
-> And the total time elapsed to get to the point where $cwnd$ is 120 segments would be the sum of both:
+> And the total time elapsed to get to the point where $cwnd$ is 120 segments would be the sum of
+> both:
 >
 > $$
 > \begin{aligned}
@@ -165,9 +166,9 @@ How many ACKs would need to be received to reach that window of 120?
 >
 > We'll use the results from the previous question to get this result.
 >
-> During slow start, each ACK increases `cwnd` by 1MSS. Therefore, the number of ACKs $N$ required to
-> increase the congestion window from its initial value of $cwnd_0 = 16 \text{ MSS}$ to the
-> slow start threshold value $ssthresh = 64 \text{ MSS}$ can be found solving the following equation
+> During slow start, each ACK increases `cwnd` by 1MSS. Therefore, the number of ACKs $N$ required
+> to increase the congestion window from its initial value of $cwnd_0 = 16 \text{ MSS}$ to the slow
+> start threshold value $ssthresh = 64 \text{ MSS}$ can be found solving the following equation
 >
 > $$
 > \begin{aligned}
@@ -180,8 +181,8 @@ How many ACKs would need to be received to reach that window of 120?
 > N_{0 \to ssthresh} = \frac{cwnd_{ssthresh} - cwnd_0}{\text{MSS}} = 64-16 = 48
 > $$
 >
-> During congestion avoidance, however, the number of acks needed to increase the congestion window by
-> one MSS is equal to the congestion window, since
+> During congestion avoidance, however, the number of acks needed to increase the congestion window
+> by one MSS is equal to the congestion window, since
 >
 > $$
 > \text{On ACK: } cwnd \to cwnd + \frac{1}{cwnd}
@@ -199,8 +200,8 @@ How many ACKs would need to be received to reach that window of 120?
 > cwnd \to cwnd + \frac{1}{cwnd} \to cwnd + \frac{2}{cwnd}
 > $$
 >
-> We will only take into account the updated $cwnd$ every RTT. For one RTT, where the whole $cwnd$ is
-> sent and then all ACKs are received, this would look like
+> We will only take into account the updated $cwnd$ every RTT. For one RTT, where the whole $cwnd$
+> is sent and then all ACKs are received, this would look like
 >
 > $$
 > cwnd \to \dots \to cwnd + \frac{cwnd}{cwnd} = cwnd + 1
@@ -213,8 +214,8 @@ How many ACKs would need to be received to reach that window of 120?
 > $$
 >
 > Note that for the first round, $cwnd$ ACKs were received, while for the second round $(cwnd + 1)$
-> ACKs were received. Therefore, in order to have $cwnd$ grow by $n \text{ MSS}$, the required amount
-> of ACKs can be approximated the following way
+> ACKs were received. Therefore, in order to have $cwnd$ grow by $n \text{ MSS}$, the required
+> amount of ACKs can be approximated the following way
 >
 > $$
 > \begin{aligned}
@@ -226,8 +227,9 @@ How many ACKs would need to be received to reach that window of 120?
 > \end{aligned}
 > $$
 >
-> With this, we can find the amound of ACKs needed to increase our $cwnd$ from $ssthresh$ size to 120
-> MSS. The amount of "rounds" is equal to $cwnd_{120} - cwnd_{ssthresh} = 120-64 = 56$. Therefore
+> With this, we can find the amound of ACKs needed to increase our $cwnd$ from $ssthresh$ size to
+> 120 MSS. The amount of "rounds" is equal to $cwnd_{120} - cwnd_{ssthresh} = 120-64 = 56$.
+> Therefore
 >
 > $$
 > \begin{aligned}
