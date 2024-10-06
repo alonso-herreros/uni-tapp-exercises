@@ -106,141 +106,145 @@ What is the value of $cwnd$?
 #### Question 4.c
 How long would it take for the congestion window ($cwnd$) to reach 120 segments?
 
-The value of the slow start threshold in segments is $\frac{65535}{1024} \text{segments} ≈ 64 \text{
-segments}$. This means, from that point on, the congestion window will grow in congestion avoidance
-mode.
-
-First, let's find how long it would take to get to that point in the current mode, which is slow
-start. Assuming the propagation time is much greater than the transmission time, we can simplify
-calculations and say that the congestion window grows to twice its size every RTT.
-$$
-cwnd_{final} = cwnd_{initial} \cdot 2^{\frac{t_{final}-t_{initial}}{RTT}}
-$$
-
-Let $t_0$ be the starting moment and $cwnd_0$ be the initial congestion window size. Then, the time
-it would take for $cwnd$ to reach $ssthresh$ is given by
-
-$$
-\begin{aligned}
-    t_{ssthresh} - t_0 &= RTT \cdot \log_2 \frac{ssthresh}{cwnd_0} \\
-    &= RTT \cdot \log_2 \frac{64}{16} \\
-    &= 2 RTT
-\end{aligned}
-$$
-
-From this point on, the congestion window grows linearly, meaning approximately every RTT it will
-grow by 1 MSS. Its growth is given by the following equation:
-
-$$
-cwnd_{final} = cwnd_{initial} + \frac{t_{final}-t_{initial}}{RTT} \text{ MSS}
-$$
-
-Now, to get from this point to the desired value, the time it would take is given by
-
-$$
-\begin{aligned}
-    t_{120 \text{ seg}} - t_{ssthresh}
-    &= RTT \cdot \frac{(cwnd_{120} - cwnd_{ssthresh})}{\text{MSS}} \\
-    &= (120-64) RTT \\
-    &= 56 RTT
-\end{aligned}
-$$
-
-And the total time elapsed to get to the point where $cwnd$ is 120 segments would be the sum of both:
-
-$$
-\begin{aligned}
-    t_{120 \text{ seg}} - t_0 &= t_{120 \text{ seg}} - t_{ssthresh} + t_{ssthresh} - t_0  \\
-    &= 2 RTT + 56 RTT \\
-    &= \boxed{58 RTT}
-\end{aligned}
-$$
+> **Answer**
+>
+> The value of the slow start threshold in segments is $\frac{65535}{1024} \text{segments} ≈ 64 \text{
+> segments}$. This means, from that point on, the congestion window will grow in congestion avoidance
+> mode.
+>
+> First, let's find how long it would take to get to that point in the current mode, which is slow
+> start. Assuming the propagation time is much greater than the transmission time, we can simplify
+> calculations and say that the congestion window grows to twice its size every RTT.
+> $$
+> cwnd_{final} = cwnd_{initial} \cdot 2^{\frac{t_{final}-t_{initial}}{RTT}}
+> $$
+>
+> Let $t_0$ be the starting moment and $cwnd_0$ be the initial congestion window size. Then, the time
+> it would take for $cwnd$ to reach $ssthresh$ is given by
+>
+> $$
+> \begin{aligned}
+>     t_{ssthresh} - t_0 &= RTT \cdot \log_2 \frac{ssthresh}{cwnd_0} \\
+>     &= RTT \cdot \log_2 \frac{64}{16} \\
+>     &= 2 RTT
+> \end{aligned}
+> $$
+>
+> From this point on, the congestion window grows linearly, meaning approximately every RTT it will
+> grow by 1 MSS. Its growth is given by the following equation:
+>
+> $$
+> cwnd_{final} = cwnd_{initial} + \frac{t_{final}-t_{initial}}{RTT} \text{ MSS}
+> $$
+>
+> Now, to get from this point to the desired value, the time it would take is given by
+>
+> $$
+> \begin{aligned}
+>     t_{120 \text{ seg}} - t_{ssthresh}
+>     &= RTT \cdot \frac{(cwnd_{120} - cwnd_{ssthresh})}{\text{MSS}} \\
+>     &= (120-64) RTT \\
+>     &= 56 RTT
+> \end{aligned}
+> $$
+>
+> And the total time elapsed to get to the point where $cwnd$ is 120 segments would be the sum of both:
+>
+> $$
+> \begin{aligned}
+>     t_{120 \text{ seg}} - t_0 &= t_{120 \text{ seg}} - t_{ssthresh} + t_{ssthresh} - t_0  \\
+>     &= 2 RTT + 56 RTT \\
+>     &= \boxed{58 RTT}
+> \end{aligned}
+> $$
 
 #### Question 4.d
 How many ACKs would need to be received to reach that window of 120?
 
-We'll use the results from the previous question to get this result.
-
-During slow start, each ACK increases `cwnd` by 1MSS. Therefore, the number of ACKs $N$ required to
-increase the congestion window from its initial value of $cwnd_0 = 16 \text{ MSS}$ to the
-slow start threshold value $ssthresh = 64 \text{ MSS}$ can be found solving the following equation
-
-$$
-\begin{aligned}
-cwnd_{final} = cwnd_{initial} + N \text{ MSS} ⇒ \\
-N_{initial \to final} = \frac{cwnd_{final} - cwnd_{initial}}{\text{MSS}}
-\end{aligned}
-$$
-
-$$
-N_{0 \to ssthresh} = \frac{cwnd_{ssthresh} - cwnd_0}{\text{MSS}} = 64-16 = 48
-$$
-
-During congestion avoidance, however, the number of acks needed to increase the congestion window by
-one MSS is equal to the congestion window, since
-
-$$
-\text{On ACK: } cwnd \to cwnd + \frac{1}{cwnd}
-$$
-
-For two acks, this becomes
-
-$$
-cwnd \to cwnd + \frac{1}{cwnd} \to cwnd + \frac{1}{cwnd} + \frac{1}{cwnd + \frac{1}{cwnd}}
-$$
-
-However, since $cwnd \gg \frac{1}{cwnd}$, we will simplify this into 
-
-$$
-cwnd \to cwnd + \frac{1}{cwnd} \to cwnd + \frac{2}{cwnd}
-$$
-
-We will only take into account the updated $cwnd$ every RTT. For one RTT, where the whole $cwnd$ is
-sent and then all ACKs are received, this would look like
-
-$$
-cwnd \to \dots \to cwnd + \frac{cwnd}{cwnd} = cwnd + 1
-$$
-
-Then, for the next round the growth could be expressed as follows
-
-$$
-cwnd \to cwnd + \frac{cwnd}{cwnd} = cwnd + 1 \to cwnd + 1 + \frac{cwnd+1}{cwnd+1} = cwnd + 2
-$$
-
-Note that for the first round, $cwnd$ ACKs were received, while for the second round $(cwnd + 1)$
-ACKs were received. Therefore, in order to have $cwnd$ grow by $n \text{ MSS}$, the required amount
-of ACKs can be approximated the following way
-
-$$
-\begin{aligned}
-    N_{cwnd_x \to cwnd_{x+n}}
-    &= \overbrace{cwnd_x}^\text{round 1} + \overbrace{cwnd_x + 1}^\text{round 2} + \dots
-       + \overbrace{cwnd_x + n-1}^\text{round n} \\
-    &= n \cdot cwnd_x + \sum_{i=0}^{n-1} i \\
-    &= n \cdot cwnd_x + \frac{n \cdot (n-1)}{2}
-\end{aligned}
-$$
-
-With this, we can find the amound of ACKs needed to increase our $cwnd$ from $ssthresh$ size to 120
-MSS. The amount of "rounds" is equal to $cwnd_{120} - cwnd_{ssthresh} = 120-64 = 56$. Therefore
-
-$$
-\begin{aligned}
-    N_{ssthresh \to 120} &= 56 \cdot cwnd_{ssthresh} + \frac{56 \cdot (56-1)}{2} \\
-    &= 5124
-\end{aligned}
-$$
-
-Finally, as before, the total number of acks is the sum of both:
-
-$$
-\begin{aligned}
-    N_{initial \to 120} &= N_{intial \to ssthresh} + N_{ssthresh \to 120} \\
-    &= 48 + 5124 \\
-    &= \boxed{5172}
-\end{aligned}
-$$
+> **Answer**
+>
+> We'll use the results from the previous question to get this result.
+>
+> During slow start, each ACK increases `cwnd` by 1MSS. Therefore, the number of ACKs $N$ required to
+> increase the congestion window from its initial value of $cwnd_0 = 16 \text{ MSS}$ to the
+> slow start threshold value $ssthresh = 64 \text{ MSS}$ can be found solving the following equation
+>
+> $$
+> \begin{aligned}
+> cwnd_{final} = cwnd_{initial} + N \text{ MSS} ⇒ \\
+> N_{initial \to final} = \frac{cwnd_{final} - cwnd_{initial}}{\text{MSS}}
+> \end{aligned}
+> $$
+>
+> $$
+> N_{0 \to ssthresh} = \frac{cwnd_{ssthresh} - cwnd_0}{\text{MSS}} = 64-16 = 48
+> $$
+>
+> During congestion avoidance, however, the number of acks needed to increase the congestion window by
+> one MSS is equal to the congestion window, since
+>
+> $$
+> \text{On ACK: } cwnd \to cwnd + \frac{1}{cwnd}
+> $$
+>
+> For two acks, this becomes
+>
+> $$
+> cwnd \to cwnd + \frac{1}{cwnd} \to cwnd + \frac{1}{cwnd} + \frac{1}{cwnd + \frac{1}{cwnd}}
+> $$
+>
+> However, since $cwnd \gg \frac{1}{cwnd}$, we will simplify this into
+>
+> $$
+> cwnd \to cwnd + \frac{1}{cwnd} \to cwnd + \frac{2}{cwnd}
+> $$
+>
+> We will only take into account the updated $cwnd$ every RTT. For one RTT, where the whole $cwnd$ is
+> sent and then all ACKs are received, this would look like
+>
+> $$
+> cwnd \to \dots \to cwnd + \frac{cwnd}{cwnd} = cwnd + 1
+> $$
+>
+> Then, for the next round the growth could be expressed as follows
+>
+> $$
+> cwnd \to cwnd + \frac{cwnd}{cwnd} = cwnd + 1 \to cwnd + 1 + \frac{cwnd+1}{cwnd+1} = cwnd + 2
+> $$
+>
+> Note that for the first round, $cwnd$ ACKs were received, while for the second round $(cwnd + 1)$
+> ACKs were received. Therefore, in order to have $cwnd$ grow by $n \text{ MSS}$, the required amount
+> of ACKs can be approximated the following way
+>
+> $$
+> \begin{aligned}
+>     N_{cwnd_x \to cwnd_{x+n}}
+>     &= \overbrace{cwnd_x}^\text{round 1} + \overbrace{cwnd_x + 1}^\text{round 2} + \dots
+>        + \overbrace{cwnd_x + n-1}^\text{round n} \\
+>     &= n \cdot cwnd_x + \sum_{i=0}^{n-1} i \\
+>     &= n \cdot cwnd_x + \frac{n \cdot (n-1)}{2}
+> \end{aligned}
+> $$
+>
+> With this, we can find the amound of ACKs needed to increase our $cwnd$ from $ssthresh$ size to 120
+> MSS. The amount of "rounds" is equal to $cwnd_{120} - cwnd_{ssthresh} = 120-64 = 56$. Therefore
+>
+> $$
+> \begin{aligned}
+>     N_{ssthresh \to 120} &= 56 \cdot cwnd_{ssthresh} + \frac{56 \cdot (56-1)}{2} \\
+>     &= 5124
+> \end{aligned}
+> $$
+>
+> Finally, as before, the total number of acks is the sum of both:
+>
+> $$
+> \begin{aligned}
+>     N_{initial \to 120} &= N_{intial \to ssthresh} + N_{ssthresh \to 120} \\
+>     &= 48 + 5124 \\
+>     &= \boxed{5172}
+> \end{aligned}
+> $$
 
 ### Problem 5
 Hosts A and B establish a TCP connection. They both announced $WIN = 4 \text{ KB}$ and $MSS = 256
