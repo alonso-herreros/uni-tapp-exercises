@@ -322,28 +322,27 @@ C > S: data
 S > C: md5sum(data)
 ```
 
-The backup is carried over a full duplex of 56kbps with MTU=700 bytes (at IP level)
-and 50 ms propagation delay, the server announces a win=32KB and the length of
-the backup archive sent by the client is 10MB. Answer the following questions:
+The backup is carried over a full duplex of 56kbps with MTU=700 bytes (at IP level) and 50 ms
+propagation delay, the server announces a win=32KB and the length of the backup archive sent by the
+client is 10MB. Answer the following questions:
 
 #### Question 6.a
-Draw the timing diagram of the whole connection. regarding data transmission,
-limit the diagram data exchange to the first 8 segments and the last one.
+Draw the timing diagram of the whole connection. regarding data transmission, limit the diagram data
+exchange to the first 8 segments and the last one.
 
 #### Question 6.b
-From the point where the client starts sending backup data, how many server
-ACKs have to be received to be able to send the two first data segments?
+From the point where the client starts sending backup data, how many server ACKs have to be received
+to be able to send the two first data segments?
 
 #### Question 6.c
-What is the maximum value of the effective window reached at the client? How
-many ACKs have to be received since the client started sending data?
+What is the maximum value of the effective window reached at the client? How many ACKs have to be
+received since the client started sending data?
 
 #### Question 6.d
-If after the first segments the line experiments a 100ms problem affecting only the
-traffic client to server. When will happen the retransmission of the lost segment?
-What would be the value of the cwnd when the acknowledgemnt to that segment
-is received? How many ACKs would be needed to reach the maximum effective
-value of the sender window? Illustrate your answer with a timing diagram.
+If after the first segments the line experiments a 100ms problem affecting only the traffic client
+to server. When will happen the retransmission of the lost segment? What would be the value of the
+cwnd when the acknowledgemnt to that segment is received? How many ACKs would be needed to reach the
+maximum effective value of the sender window? Illustrate your answer with a timing diagram.
 
 #### Question 6.e
 If the link is done as indicated in the figure,
@@ -353,8 +352,8 @@ If the link is done as indicated in the figure,
 Figura 3: Table for problem 6 part e
 </p>
 
-How would this affect the cwnd? what buffer size would be needed at the router
-to allow the continuous sending in the client backup?
+How would this affect the cwnd? what buffer size would be needed at the router to allow the
+continuous sending in the client backup?
 
 ### Problem 7
 A company with five regional offices uses a TCP application to backup and send data to its Data
