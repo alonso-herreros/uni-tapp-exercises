@@ -332,19 +332,208 @@ client is 10MB. Answer the following questions:
 Draw the timing diagram of the whole connection. regarding data transmission, limit the diagram data
 exchange to the first 8 segments and the last one.
 
+> **Answer**
+>
+> ```mermaid
+> sequenceDiagram
+>     participant C
+>     participant S
+>
+>     rect rgba(128,128,128,0.2)
+>     note over C,S: Establish connection
+>         C ->> S: SYN [0 B]
+>         S ->> C: SYN, ACK [0 B]
+>         C ->> S: ACK [0 B]
+>     end
+>
+>     rect rgba(128,128,128,0.2)
+>     note over S,C: path and name of the file in the server <br/> (les or equal to 1024 Bytes)
+>         S ->> C: path (bytes 1-660) [660 B]
+>         C ->> S: ACK [0 B]
+>         S ->> C: path (bytes 661-1024) [364 B]
+>         C ->> S: ACK [0 B]
+>     end
+>
+>     rect rgba(128,128,128,0.2)
+>         note over C,S: data
+>         C ->> S: data [660 B]
+>         note over C,S: ...
+>     end
+>
+>     S ->> C: md5sum(data) [16 B]
+> ```
+
 #### Question 6.b
 From the point where the client starts sending backup data, how many server ACKs have to be received
 to be able to send the two first data segments?
 
+> **Answer**
+>
+> In order to send the first two data segments, one server ACK must be received. The first segment
+> is sent, which depletes the congestion window, as its initial size is 1 segment. Then, when the
+> first ACK is received, the second data segment can be sent. At this point, the third segment can
+> be sent as well.
+
 #### Question 6.c
 What is the maximum value of the effective window reached at the client? How many ACKs have to be
 received since the client started sending data?
+
+> **Answer**
+>
+> The max value of the effective window will be limited by the receiver window announced by the
+> server, which is 32KB. Since this value is smaller than the default `ssthresh` value of 65535, the
+> congestion control algorithm will be in slow start mode, meaning every ACK will increase the
+> congestion control window by 1 MSS. Therefore, to find how many acks need to be received in order
+> to increase the congestion window to a certain value in slow start mode, we can use the following
+> formula:
+>
+> $$
+> cwnd_{final} = cwnd_{initial} + N_{ACKs} \cdot 1 \text{ MSS}
+> $$
+>
+> Therefore,
+>
+> $$
+> \begin{aligned}
+>     cwnd_{final} > 32000 \iff N_{ACKs} &> \frac{cwnd_{final} - cwnd_{initial}}{1 \text{ MSS}} \\
+>     &> \frac{32000 - 660}{660} \\
+>     &> 47.48
+> \end{aligned}
+> $$
+>
+> So the number of ACKs from the server required for the effective window to reach its maximum size
+> is 48 ACKs.
 
 #### Question 6.d
 If after the first segments the line experiments a 100ms problem affecting only the traffic client
 to server. When will happen the retransmission of the lost segment? What would be the value of the
 cwnd when the acknowledgemnt to that segment is received? How many ACKs would be needed to reach the
 maximum effective value of the sender window? Illustrate your answer with a timing diagram.
+
+> **Answer**
+>
+> Assuming the "100ms problem" only means one segment was affected and it was lost, the
+> retransmission will happen when the client receives 3 duplicate ACKs from the server. The server
+> will send those duplicate ACKs when it receives the segments that follow the lost segment. As it's
+> not expecting those segments yet, it will respond with duplicate ACKs with the number that
+> corresponds to the lost segment.
+>
+> Assuming fast retransmission / fast recovery is in use, after the ACK for the lost segment is
+> received, the client's `cwnd` will be set to half the `cwnd` value prior to receiving the 3
+> duplicate ACKs, even though the fast recovery should have allowed it to 'inflate' to a value
+> greater than this.
+>
+> Since the congestion control protocol will be set to congestion avoidance, the number of ACKs
+> required for the effective window to reach its maximum effective value can be found using the
+> following expression, obtained in exercise 4.
+>
+> $$
+> N_{cwnd_x \to cwnd_{x+n \text{ MSS}}} = n \cdot \frac{cwnd_x}{\text{MSS}} + \frac{n \cdot (n-1)}{2}
+> $$
+>
+> As we the exact moment when the error occurs is not specified, the diagram is generic and very
+> simplified. However, I will take into account the transmission and propagation times.
+>
+> ```mermaid
+> xychart-beta
+>     x-axis "Time (ms)" [0, 100, 205, 411, 511, 617, 717, 817, 917, 1000, 1100, 1217, 1317, 1417, 1517, 1617, 1717]
+>     y-axis "Congestion window (MSS)"
+>     line [1, 1.5, 2, 3, 4, 5, 6, 7, 7, 7, 6, 7, 8, 3, 3.333, 3.633]
+> ```
+
+<!-- Calculations
+R = 56 kb/s
+Sh = 40 B
+MTU = 700 B
+MSS = MTU - Sh
+Ttx = MTU/R
+Tack = Sh/R
+Tp = 50 ms
+RTT = Ttx+Tack+2*Tp
+
+Wcs = RTT/Ttx
+
+== Timing ==
+ssthresh = 65535 B / MSS
+cwnd = 1
+t0 = 0
+;t1s = t0
+    t1e = Ttx
+    t1a = RTT
+        cwnd = cwnd + 1
+;t2s = t1a
+    t2e = t2s + Ttx 
+    t2a = t2s + RTT
+        cwnd = cwnd + 1
+    * At this point, cwnd = 3 > Wcs
+    * So we have continuous sending
+;t3s = t2e
+    t3e = t3s + Ttx
+    t3a = t3s + RTT
+        cwnd = cwnd + 1
+;t4s = t2a
+    t4e = t4s + Ttx
+    t4a = t4s + RTT
+        cwnd = cwnd + 1
+;t5s = t4e
+    t5e = t5s + Ttx
+    t5a = t5s + RTT
+        cwnd = cwnd + 1
+;t6s = t5e
+    t6e = t6s + Ttx
+    t6a = t6s + RTT
+        cwnd = cwnd + 1
+* Let's say segment 7 is lost
+;t7s = t6e
+    t7e = t7s + Ttx
+    * No ACK...
+;t8s = t7e
+    t8e = t8s + Ttx
+    t8a = t8s + RTT
+        cwnd = cwnd
+    * This will be the first duplicate ACK. cwnd does not increase.
+;t9s = t8e
+    t9e = t9s + Ttx
+    t9a = t9s + RTT
+        cwnd = cwnd
+    * Second duplicate ACK
+;t10s = t9e
+    t10e = t10s + Ttx
+    t10a = t10s + RTT
+        ssthresh = floor(cwnd/2)
+        cwnd = ssthresh + 3
+    * And third duplicate ACK! We'll have to retransmit segment 7 immediately and start
+    * Fast retransmit / fast recovery... but while that arrives, we'll keep sending
+;t11s = t10e
+    t11e = t11s + Ttx
+    t11a = t11s + RTT
+        cwnd = cwnd + 1
+    * The end time is still before the third duplicate ACK. Meanwhile, this is the 4th dup ACK
+;t12s = t11e
+    t12e = t12s + Ttx
+    t12a = t12s + RTT
+        cwnd = cwnd + 1
+* Finally, when we finish transmission of this thing, we get the third duplicate ACK. Oops!
+;t7_s = t12e
+    t7_e = t7_s + Ttx
+    t7_a = t7_s + RTT
+        cwnd = ssthresh
+        * fast recovery is over, deflating and switching to congestion avoidance
+        * this ACK should account for all segments until this point (segment 12 included)
+* After retransmitting segment 7 (t=1.41ms), cwnd is 7, and the last segment acknowledged was
+* segment 6, so we can actually transmit segment 13
+;t13s = t7_e
+    t13e = t13s + Ttx
+    t13a = t13s + RTT
+        cwnd = cwnd + 1/cwnd
+        * Remember, we're now in congestion avoidance
+* And after segment 13 (t=1.51ms), cwnd is 8 and the last ACKed segment was 6, so we can actually
+* transmit segment 14 right away
+;t14s = t13e
+    t14e = t14s + Ttx
+    t14a = t14s + RTT
+        cwnd = cwnd + 1/cwnd
+-->
 
 #### Question 6.e
 If the link is done as indicated in the figure,
@@ -356,6 +545,52 @@ Figura 3: Table for problem 6 part e
 
 How would this affect the cwnd? what buffer size would be needed at the router to allow the
 continuous sending in the client backup?
+
+> **Answer**
+>
+> The congestion window would not be affected by this.
+>
+> For 10 MB of data, there will be at least $\left⌈\frac{S_{backup}}{MSS}\right⌉$ segments sent.
+>
+> $$
+> \begin{aligned}
+>     N_{seg, T} &=\left⌈\frac{S_{backup}}{MSS}\right⌉ \\
+>     &= \left⌈\frac{10 \cdot 10^6 \text{ B}}{660 \text{ B}}\right⌉ \\
+>     &= \left⌈15151.5\right⌉ \\
+>     &= 15152
+> \end{aligned}
+> $$
+>
+> This is much greater than the number of ACKs required to reach the maximum limit of $W_{ef}$, which
+> is equal to the receiver window advertised by the server, $win=32 \text{ kB}$. Therefore, we know
+> that this value of $W_{ef}$ will be reached during the transmission. Since the connection between
+> the client and the router is "fast" (meaning data is transferred immediately), the client will send
+> as much data as its effective window allows, and only then wait. The router must therefore be able
+> to store that much data, including headers.
+>
+> Those 32 kB of maximum effective window must be sent in segments of MSS at most, so the number of
+> segments required to deplete this window is
+>
+> $$
+> \begin{aligned}
+>     N_{seg;max} &= \left⌈\frac{W_{ef;max}}{MSS}\right⌉ \\
+>     &= \left⌈\frac{32 \cdot 10^3 \text{ B}}{660 \text{ B}}\right⌉ \\
+>     &= \left⌈48.48\right⌉ \\
+>     &= 49
+> \end{aligned}
+> $$
+>
+> With this information, we can calculate the total required buffer size:
+>
+> $$
+> \begin{aligned}
+>     S_{buf} &= N_{seg;max} \cdot S_{h(TCP/IP)} + W_{ef;max} \\
+>     &= 49 * 40 \text{ B} + 32 \cdot 10^3 \text{ B} \\
+>     &= \boxed{33.96 \text{ kB}}
+> \end{aligned}
+> $$
+>
+> And that's the minimum required router buffer size to avoid data loss: 33.96 kB (33960 B)
 
 ### Problem 7
 A company with five regional offices uses a TCP application to backup and send data to its Data
