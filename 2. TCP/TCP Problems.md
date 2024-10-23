@@ -609,12 +609,26 @@ If only one regional office is active (i.e. only one sending backup data):
 2. If $W_e$ is reached by the sender and a timeout occurs, how much time is required to reach $W_e$
    again?
 
+> **Answer**
+
+1. $W_{CS} ≈ \frac{RTT}{t_{tx}} ≈$
+
+2. 
+
 #### Case 7.b
 If all the offices are active (i.e. sending traffic) to the DC server:
 
-1. Can they reach the value We as computed in previous questions?
+1. Can they reach the value $W_e$ as computed in previous questions?
 2. Is the link to the server of the DC fairly shared?
 3. Tuning any TCP parameter can provide a better performance? Explain your answer.
+
+> 1. In this case, the transmission rate is the minimum between each regional
+> office's transmission rate into the datacenter's router and one fifth of the
+> datacenter's link to its router:
+>
+>     $$
+>     R_{min} = \min \left( \frac{2 \text{ Gbps}}{5}, 1 \text{ Gbps} \right) = \frac{2 \text{ Gbps}}{5}
+>     $$
 
 ## 3. Advanced problems
 
@@ -642,14 +656,70 @@ Figura 4: Average connection
 #### Question 8.a
 Calculate the window that allows for continuous sending
 
+> **Answer**
+>
+> $$
+> \begin{aligned}
+>     W_{CS} &= \frac{RTT}{t_{tx}}\\
+>     &= \frac{t_{tx} + t_{ACK} + 2t_{prop}}{t_{tx}} \\
+>     &= \frac{20 μs + 0.55 μs + 2 ⋅ 40 ms}{20μs} \\
+>     &≈ \frac{80 ms}{20 μs} \\
+>     &= 4000 \text{ segments}
+> \end{aligned}
+> $$
+
 #### Question 8.b
 Calculate the exact (bandwidth at application level (in Mbps) once the continuous sending window has
 been reached. Can be the game played considering it requires more than 500Mbps at application level?
+
+> **Answer**
+>
+> This is $BW_a ≈ \frac{W_{cs} (\text{bits})}{RTT} ≈ 584 \text{Mbps}$
+>
+> If we were to take into account the fact that the RTT for sending a whole
+> window is actually $RTT' = RTT + 4000 t_{tx}$, we'd get a bandwidth of $BW_a'
+> = \frac{W_{cs} (\text{bits})}{RTT'} ≈ 292 \text{Mbps}$
 
 #### Question 8.c
 How long would it take (in both RTTs and seconds) to reach the continuous sending window since the
 beginning of the connection? Indicate always the algorithm used to calculate the window and the
 value of cwnd at any time, especially when the algorithm changes
+
+> **Answer**
+>
+> Assuming every segment generates an ACK
+
+First, we move from cwnd of 1 segment in slow start up to `ssthresh`, and then
+grow in congestion avoidance mode. We'll find the value in RTTs first
+
+$$
+ssthresh = \frac{65535}{1460} = 44.9 ≈ 45
+$$
+
+To get to this point, we increase the cwnd by 1 MSS every RTT.
+
+$$
+n_{RTT; 1 → 45} = \log_{2} \left( \frac{45}{1} \right) = 5.5 ≈ 6
+$$
+
+Then, we'd grow in congestion avoidance at a rate of approximately 1 MSS every 2
+RTTs.
+
+$$
+n_{RTT; 45 → 4000} = 4000 - 45 = 3955
+$$
+
+In total:
+
+$$
+N_{RTT; W_{ef}} = n_{RTT; 1 → 45} + n_{RTT; 45 → 4000} = 3961
+$$
+
+In seconds, that's
+
+$$
+3961 \cdot 80 \text{ ms} = 316.88 \text{ s}
+$$
 
 ### Advanced Problem 9
 (Continues the previous problem points)  
