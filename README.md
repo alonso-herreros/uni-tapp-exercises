@@ -4,4 +4,3 @@
 **Telecommunication Technologies Engineering** | *Universidad Carlos III de Madrid*
 
 ---
-
