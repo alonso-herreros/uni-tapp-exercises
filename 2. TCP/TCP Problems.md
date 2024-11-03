@@ -41,7 +41,6 @@
         * [Question 10.b](#question-10b)
         * [Question 10.c](#question-10c)
 
-
 ---
 
 ## 1. Basic Problems
@@ -650,7 +649,7 @@ If only one regional office is active (i.e. only one sending backup data):
 
 1. $W_{CS} ≈ \frac{RTT}{t_{tx}} ≈$
 
-2. 
+2.
 
 #### Case 7.b
 If all the offices are active (i.e. sending traffic) to the DC server:
