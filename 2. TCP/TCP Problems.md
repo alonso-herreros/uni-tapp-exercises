@@ -1,9 +1,46 @@
-## Telematic Applications
+## Telematic Applications <!-- omit in toc -->
 
 # TCP Exercises
 
 *Academic year 2024-2025*  
 *Daniel Díaz Sánchez*
+
+* [1. Basic Problems](#1-basic-problems)
+    * [Basic Problem 1](#basic-problem-1)
+    * [Basic Problem 2](#basic-problem-2)
+    * [Basic Problem 3](#basic-problem-3)
+* [2. Problems](#2-problems)
+    * [Problem 4](#problem-4)
+        * [Question 4.a](#question-4a)
+        * [Question 4.b](#question-4b)
+        * [Question 4.c](#question-4c)
+        * [Question 4.d](#question-4d)
+    * [Problem 5](#problem-5)
+        * [Question 5.a](#question-5a)
+        * [Question 5.b](#question-5b)
+        * [Question 5.c](#question-5c)
+    * [Problem 6](#problem-6)
+        * [Question 6.a](#question-6a)
+        * [Question 6.b](#question-6b)
+        * [Question 6.c](#question-6c)
+        * [Question 6.d](#question-6d)
+        * [Question 6.e](#question-6e)
+    * [Problem 7](#problem-7)
+        * [Case 7.a](#case-7a)
+        * [Case 7.b](#case-7b)
+* [3. Advanced problems](#3-advanced-problems)
+    * [Advanced Problem 8](#advanced-problem-8)
+        * [Question 8.a](#question-8a)
+        * [Question 8.b](#question-8b)
+        * [Question 8.c](#question-8c)
+    * [Advanced Problem 9](#advanced-problem-9)
+        * [Question 9.a](#question-9a)
+        * [Question 9.b](#question-9b)
+    * [Advanced Problem 10](#advanced-problem-10)
+        * [Question 10.a](#question-10a)
+        * [Question 10.b](#question-10b)
+        * [Question 10.c](#question-10c)
+
 
 ---
 
