@@ -8,9 +8,9 @@
 
 ### Table of Contents
 
-* [Problem 1](#problem-1)
-    * [Section 1.a)](#section-1a)
-* [Problem 2](#problem-2)
+* [Problem 1 ✓](#problem-1-)
+    * [Section 1.a) ✓](#section-1a-)
+* [Problem 2 ✓](#problem-2-)
     * [Section 2.a) ✓](#section-2a-)
     * [Section 2.b) ✓](#section-2b-)
     * [Section 2.c) ✓](#section-2c-)
@@ -19,7 +19,7 @@
 
 ---
 
-## Problem 1
+## Problem 1 ✓
 
 The content of an HTML file named index.html is shown below. The page is
 accessible at the URL `http://www.test.com/index.html`.
@@ -33,19 +33,22 @@ accessible at the URL `http://www.test.com/index.html`.
 </html>
 ```
 
-### Section 1.a)
+### Section 1.a) ✓
 
 If the user enters the URL `http://www.test.com/index.html` in their browser
 using HTTP 1.1,
 
-#### Question 1.a.I)
+#### Question 1.a.I) ✓
 How many connections will be opened? And in HTTP 1.0?
 
 > **Answer** (class notes)
 >
-> In HTTP 1.1, only one connection is opened.
+> In HTTP 1.1, only one connection is needed, as it can be made persistent.
 >
-> In HTTP 1.0, two connections are opened: one for HTML and one for PTC
+> In HTTP 1.0, two connections are opened:
+>
+> * One for the HTML file, which is closed after the response is finished.
+> * Another for the image.
 
 #### Question 1.a.II) ✓
 Write the requests that are made assuming the use of HTTP 1.1.
@@ -139,7 +142,7 @@ one segment, and the image 271 segments (including HTTP headers), knowing that
 >
 > Total for non-premium users: $\boxed{22.5 \text{ RTTs}}$
 
-## Problem 2
+## Problem 2 ✓
 
 The figure 1 shows a network diagram in which a server supporting HTTP/1.1 and
 HTTP/2 provides a streaming application. Available resources for every phase of
